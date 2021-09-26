@@ -3,10 +3,10 @@ import { useParams, useHistory, Link } from "react-router-dom";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import "./singleproduct.scss";
 import Footer from "../Footer/Footer";
-// import { VscClose } from "react-icons/vsc";
 import "../../components/Product/product.scss";
 
 const SingleProduct = ({ product, brands }) => {
+  const apiUrl = "https://admin.sport-mix.uz/"
   const history = useHistory();
   const { id } = useParams();
   const [order, setOrder] = useState([]);
@@ -74,7 +74,7 @@ const SingleProduct = ({ product, brands }) => {
   const onSubmitModal = (e) => {
     e.preventDefault();
     let api = new XMLHttpRequest();
-    var forSend = `🏪 Магазин: ${prodOrder}%0A💵 Наличными%0A%0A👥Имя: ${clientName}%0A📞Тел: ${clientphoneNumber}%0A📦Товар: ${order}%0A💵Итого: ${orderPriceSplite} сум%0A📍 Регион: ${region}%0A🖇 Количество: ${quantity}%0A%0A https://admin.sportmix.uz/uploads/${productImage}`;
+    var forSend = `🏪 Магазин: ${prodOrder}%0A💵 Наличными%0A%0A👥Имя: ${clientName}%0A📞Тел: ${clientphoneNumber}%0A📦Товар: ${order}%0A💵Итого: ${orderPriceSplite} сум%0A📍 Регион: ${region}%0A🖇 Количество: ${quantity}%0A%0A ${apiUrl + "uploads/" + productImage}`;
     var token = "1745885286:AAGnCac1rJJnQI2XIAUW8LL2_RN2MHN-SVE";
     var url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_ID}&text=${forSend}`;
     api.open("GET", url, true);
@@ -97,7 +97,7 @@ const SingleProduct = ({ product, brands }) => {
               <div className="main-image">
                 <img
                   className="oneImage"
-                  src={"https://admin.sportmix.uz/uploads/" + mainImage}
+                  src={apiUrl + "/uploads/" + mainImage}
                   alt={singleProduct.image}
                 />
               </div>
@@ -105,7 +105,7 @@ const SingleProduct = ({ product, brands }) => {
                 {singleProduct.gallery_1 ? (
                   <img
                     src={
-                      "https://admin.sportmix.uz/uploads/" +
+                      apiUrl + "/uploads/" +
                       singleProduct.gallery_1
                     }
                     alt=""
@@ -117,7 +117,7 @@ const SingleProduct = ({ product, brands }) => {
                 {singleProduct.gallery_2 ? (
                   <img
                     src={
-                      "https://admin.sportmix.uz/uploads/" +
+                      apiUrl + "/uploads/" +
                       singleProduct.gallery_2
                     }
                     alt=""
@@ -129,7 +129,7 @@ const SingleProduct = ({ product, brands }) => {
                 {singleProduct.gallery_3 ? (
                   <img
                     src={
-                      "https://admin.sportmix.uz/uploads/" +
+                      apiUrl + "/uploads/" +
                       singleProduct.gallery_3
                     }
                     alt=""
@@ -148,7 +148,7 @@ const SingleProduct = ({ product, brands }) => {
                   <Link to={`/${singleProductBrand.link}`}>
                     <img
                       src={
-                        "https://admin.sportmix.uz/uploads/" +
+                        apiUrl + "/uploads/" +
                         singleProductBrand.image
                       }
                       alt={singleProductBrand.name}
@@ -165,22 +165,18 @@ const SingleProduct = ({ product, brands }) => {
                   <p className="price">{Number(singleProduct.price).toLocaleString()}сум </p>
                 </Col>
                 <Col lg="6">
-                {singleProduct.order_type === "all" || singleProduct.order_type === "" || singleProduct.order_type === "installment" ? (
-                  <Button className="orderButton" onClick={() => { clickBtn(); }} > Рассрочку </Button>) : ("")}
+                  {singleProduct.order_type === "all" || singleProduct.order_type === "" || singleProduct.order_type === "installment" ? (
+                    <Button className="orderButton" onClick={() => { clickBtn(); }} > Рассрочку </Button>) : ("")}
                 </Col>
-                
 
               </Row>
-              <p className="desc"><span>Описание<br/></span><br/>{singleProduct.description}</p>
-
-              {/* 12312312312312312313123 */}
+              <p className="desc"><span>Описание<br /></span><br />{singleProduct.description}</p>
 
               <form onSubmit={onSubmitModal}>
-
+                <br />
                 <div>
-                  <label className=" mb-1" htmlFor="">
-                    {/* <b>Товар:</b> {order} */}
-                    <b>Закажите прямо сейчас</b>
+                  <label className="mb-1" htmlFor="">
+                    <h4><strong>Закажите прямо сейчас</strong></h4>
                   </label>
 
                   <Row>
@@ -197,7 +193,6 @@ const SingleProduct = ({ product, brands }) => {
                               value={clientName}
                             />
                           </Form.Group>
-
                         </Col>
                         <Col lg="12" md="12">
                           <Form.Group className="mb-3" controlId="formBasicTel">
@@ -210,7 +205,6 @@ const SingleProduct = ({ product, brands }) => {
                               value={clientphoneNumber}
                             />
                           </Form.Group>
-
                         </Col>
                         <Col lg="12" md="12">
                           <Form.Group className="mb-3" controlId="formBasicRegion">
@@ -231,7 +225,6 @@ const SingleProduct = ({ product, brands }) => {
                               <option value="Хорезмская область">Хорезмская область	</option>
                             </Form.Control>
                           </Form.Group>
-
                         </Col>
                         <Col lg="12" md="12">
                           <Form.Group className="mb-3" controlId="formBasicQuantity">
@@ -247,9 +240,7 @@ const SingleProduct = ({ product, brands }) => {
 
                         </Col>
                       </Row>
-
                       <input type="hidden" className="" placeholder="product" value={order} />
-
                       <Row className="singleProductButtons">
                         {singleProduct.order_type === "all" ||
                           singleProduct.order_type === "" ||
@@ -257,126 +248,15 @@ const SingleProduct = ({ product, brands }) => {
                           <Col lg="12" md="12" >
                             <Button className="zakazatButton" type="submit" variant="dark"  > Заказать </Button>
                           </Col>) : ("")}
-
                       </Row>
                     </Col>
                   </Row>
-
-
-
-                  {/* <button type="submit" className="buttonModal">
-                    Отправить
-                  </button> */}
                 </div>
               </form>
-
-              {/* <div className="singleProductButtons">
-                {singleProduct.order_type === "all" ||
-                  singleProduct.order_type === "" ||
-                  singleProduct.order_type === "order" ? (
-                  <div
-                    className="orderr"
-                    onClick={() => {
-                      setOpenModalClass("modalSection");
-                    }}
-                  >
-                    <Button
-                      className="zakazatButton"
-                      variant="dark"
-                      onClick={() => {
-                        setOrder(singleProduct.name);
-                        setProdOrder(singleProduct.brand_name);
-                        setProdOrderPrice(singleProduct.price);
-                      }}
-                    >
-                      Заказать
-                    </Button>
-                  </div>
-                ) : (
-                  ""
-                )}
-                {singleProduct.order_type === "all" ||
-                  singleProduct.order_type === "" ||
-                  singleProduct.order_type === "installment" ? (
-                  <Button
-                    className="orderButton"
-                    onClick={() => {
-                      clickBtn();
-                    }}
-                  >
-                    Рассрочку
-                  </Button>
-                ) : (
-                  ""
-                )}
-              </div> */}
             </Col>
           </Row>
           <Row>
-            {/* <div className={openModalClass}>
-              <form className="mainModalContainer" onSubmit={onSubmitModal}>
-                <div
-                  className="closeBtn"
-                  onClick={() => setOpenModalClass("forHidden")}
-                >
-                  <VscClose />
-                </div>
-                <div className="inputFormBox">
-                  <label htmlFor="">
-                    <b>Товар:</b> {order}
-                  </label>
-                  <Form.Control
-                    className="textsModalForm"
-                    type="text"
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Имя"
-                    required
-                    value={clientName}
-                  />
-                  <Form.Control
-                    className="textsModalForm"
-                    type="tel"
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="Номер телефона"
-                    required
-                    value={clientphoneNumber}
-                  />
-                  <Form.Control className="textsModalForm" as="select" onChange={(e) => setRegion(e.target.value)} required >
-                    <option value="">Выберите регион</option>
-                    <option value="Ташкент">Ташкент</option>
-                    <option value="Ташкентская область">Ташкентская область	</option>
-                    <option value="Андижанская область">Андижанская область</option>
-                    <option value="Бухарская область">Бухарская область</option>
-                    <option value="Джизакская область">Джизакская область</option>
-                    <option value="Кашкадарьинская область">Кашкадарьинская область</option>
-                    <option value="Навоийская область">Навоийская область</option>
-                    <option value="Наманганская область">Наманганская область</option>
-                    <option value="Самаркандская область">Самаркандская область</option>
-                    <option value="Сурхандарьинская область">Сурхандарьинская область</option>
-                    <option value="Сырдарьинская область">Сырдарьинская область</option>
-                    <option value="Ферганская область">Ферганская область</option>
-                    <option value="Хорезмская область">Хорезмская область	</option>
-                  </Form.Control>
-                  <Form.Control as="select" className="textsModalForm" onChange={(e) => setQuantity(e.target.value)} required >
-                    <option value="">какой количество </option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                  </Form.Control>
-                  <input
-                    type="hidden"
-                    className="textsModalForm"
-                    placeholder="product"
-                    value={order}
-                  />
-                  <button type="submit" className="buttonModal">
-                    Отправить
-                  </button>
-                </div>
-              </form>
-            </div> */}
+
             <div className={successModal}>
               <div id="success-icon">
                 <div></div>

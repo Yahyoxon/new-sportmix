@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import Calculator from "../../components/Calculator/Calculator";
 import "./product.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.min.css";
 import { Link } from "react-router-dom";
 import { VscClose } from "react-icons/vsc";
-// import Pagination from "react-js-pagination";
 import LazyLoad from 'react-lazyload';
 
 const Product = (props) => {
-  const uploadURL = "https://admin.sportmix.uz/uploads/";
+  const uploadURL = "https://admin.sport-mix.uz/uploads/";
   const [selectedProduct, setselectedProduct] = useState([]);
   const [order, setOrder] = useState([]);
   const [prodOrder, setProdOrder] = useState([]);
@@ -26,30 +24,6 @@ const Product = (props) => {
   const [wordEntered, setWordEntered] = useState("");
   const [notFound, setNotFound] = useState();
   const [activePageData, setActivePageData] = useState([]);
-  // const [activePage, setActivePage] = useState(1);
-  // const [resultProduct, setResultProduct] = useState(props.product);
-
-  // //Pagination
-  // const handlePageChange = (pageNumber) => {
-  //   console.log(`active page is ${pageNumber}`);
-  //   setActivePage(pageNumber);
-  // };
-  // const perPageProduct = 20;
-  // let paginationProduct = [];
-
-  // const fetchProducts = () => {
-  //   for (
-  //     let k = activePage * perPageProduct - perPageProduct;
-  //     k < 1 * perPageProduct;
-  //     k++
-  //   ) {
-  //     paginationProduct[k] = props.product[k];
-  //   }
-  //   setResultProduct(paginationProduct);
-  // };
-  // useEffect(() => {
-  //    fetchProducts();
-  // },[activePage,props.product]);
 
   //  filter brands
   var chat_ID = "-1001247339615";
@@ -62,7 +36,7 @@ const Product = (props) => {
   const onSubmitModal = (e) => {
     e.preventDefault();
     let api = new XMLHttpRequest();
-    var forSend = `🏪 Магазин: ${prodOrder}%0A💵 Наличными%0A%0A👥 Имя: ${clientName}%0A📞 Тел: ${clientphoneNumber}%0A📦 Товар: ${order}%0A💵 Итого: ${orderPriceSplite} сум%0A📍 Регион: ${region}%0A🖇 Количество: ${quantity}%0A%0A https://admin.sportmix.uz/uploads/${selectedProduct.image}`;
+    var forSend = `🏪 Магазин: ${prodOrder}%0A💵 Наличными%0A%0A👥 Имя: ${clientName}%0A📞 Тел: ${clientphoneNumber}%0A📦 Товар: ${order}%0A💵 Итого: ${orderPriceSplite} сум%0A📍 Регион: ${region}%0A🖇 Количество: ${quantity}%0A%0A ${uploadURL + selectedProduct.image}`;
     var token = "1745885286:AAGnCac1rJJnQI2XIAUW8LL2_RN2MHN-SVE";
     var url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_ID}&text=${forSend}`;
     api.open("GET", url, true);
@@ -110,11 +84,11 @@ const Product = (props) => {
   }, [props.product]);
   return (
     <>
-      <Calculator
+      {/* <Calculator
         brands={props.brands}
         CalcProductDB={props.product}
         selectedProduct={selectedProduct}
-      />
+      /> */}
       <Container>
         <Row>
           <Col>
@@ -141,10 +115,10 @@ const Product = (props) => {
       </Container>
       <div className="productComponent">
         <Container>
-        <Row>
-          <Col lg="6" md="6" sm="12" className="tovariorder">
-            <div className="tovari">Товары</div>
-          </Col>
+          <Row>
+            <Col lg="6" md="6" sm="12" className="tovariorder">
+              <div className="tovari">Товары</div>
+            </Col>
             <Col lg="6" md="6" sm="12" className="searchorder">
               <div className="searchContainer">
                 <input
@@ -232,15 +206,6 @@ const Product = (props) => {
                   </Col>
                 )
               )}
-          </Row>
-          <Row>
-            {/* <Pagination
-              activePage={activePage}
-              itemsCountPerPage={perPageProduct}
-              totalItemsCount={216}
-              pageRangeDisplayed={5}
-              onChange={handlePageChange}
-            /> */}
           </Row>
           <Row>
             <div className={openModalClass}>

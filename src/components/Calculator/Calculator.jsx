@@ -4,7 +4,7 @@ import "./calculator.scss";
 import { Link } from "react-router-dom";
 
 const Calculator = (props) => {
-  const api = "https://admin.sportmix.uz"
+  const api = "https://admin.sport-mix.uz"
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [month, setmonth] = useState(12);
@@ -55,7 +55,7 @@ const Calculator = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
     let api = new XMLHttpRequest();
-    var forSend = `🏪 Магазин: ${brand}%0A⏰ Рассрочку%0A%0A👥Имя: ${username}%0A📞Тел: ${phone}%0A📦Товар:+${name}%0A%0A📅Месяц: ${month}%0A💵Итого: ${num} сум%0A🌙Ежемесячная выплата: ${numByMonth} сум%0A📍 Регион: ${region}%0A🖇 Количество: ${quantity}%0A%0A https://admin.sportmix.uz/uploads/${image}`;
+    var forSend = `🏪 Магазин: ${brand}%0A⏰ Рассрочку%0A%0A👥Имя: ${username}%0A📞Тел: ${phone}%0A📦Товар:+${name}%0A%0A📅Месяц: ${month}%0A💵Итого: ${num} сум%0A🌙Ежемесячная выплата: ${numByMonth} сум%0A📍 Регион: ${region}%0A🖇 Количество: ${quantity}%0A%0A https://admin.sport-mix.uz/uploads/${image}`;
     var token = "1745885286:AAGnCac1rJJnQI2XIAUW8LL2_RN2MHN-SVE";
     var url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_ID}&text=${forSend}`;
     api.open("GET", url, true);

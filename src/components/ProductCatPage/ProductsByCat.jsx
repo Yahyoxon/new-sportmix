@@ -2,18 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Button, Col, Container, Row, Navbar, Form } from "react-bootstrap";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import Calculator from "../Calculator/Calculator";
 import { VscClose } from "react-icons/vsc";
-// import cardImage from "../../assets/card.png";
-// import cartPasport from "../../assets/passport.jpg";
 import logo from "../../sportmix-logo.png";
 import LazyLoad from 'react-lazyload';
 
-
-
-
 const ProductByCat = (props) => {
-  const api = "https://admin.sportmix.uz";
+  const apiUrl = "https://admin.sport-mix.uz/";
   const { link } = useParams();
   const { id } = useParams();
   const [selectedProduct, setselectedProduct] = useState([]);
@@ -44,7 +38,7 @@ const ProductByCat = (props) => {
   const onSubmitModal = (e) => {
     e.preventDefault();
     let api = new XMLHttpRequest();
-    var forSend = `🏪 Магазин: ${prodOrder}%0A💵 Наличными%0A%0A👥Имя: ${clientName}%0A📞Тел: ${clientphoneNumber}%0A📦Товар: ${order}%0A💵Итого: ${orderPriceSplite} сум%0A📍 Регион: ${region}%0A🖇 Количество: ${quantity}%0A%0A https://admin.sportmix.uz/uploads/${selectedProduct.image}`;
+    var forSend = `🏪 Магазин: ${prodOrder}%0A💵 Наличными%0A%0A👥Имя: ${clientName}%0A📞Тел: ${clientphoneNumber}%0A📦Товар: ${order}%0A💵Итого: ${orderPriceSplite} сум%0A📍 Регион: ${region}%0A🖇 Количество: ${quantity}%0A%0A ${apiUrl + "upload/" + selectedProduct.image}`;
     var token = "1745885286:AAGnCac1rJJnQI2XIAUW8LL2_RN2MHN-SVE";
     var url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_ID}&text=${forSend}`;
     api.open("GET", url, true);
@@ -115,7 +109,7 @@ const ProductByCat = (props) => {
                           <img
                             className="brandLogo"
                             key={i}
-                            src={api + "/uploads/" + brand.image}
+                            src={apiUrl + "uploads/" + brand.image}
                             alt={brand.name}
                           />
                           <div className="brandName">{brand.name}</div>
@@ -144,10 +138,10 @@ const ProductByCat = (props) => {
           </Row>
         </Container>
       </div>
-      <Calculator
+      {/* <Calculator
         brands={props.brandsProps}
         selectedProduct={selectedProduct}
-      />
+      /> */}
       <br />
       <br />
       <Container>
@@ -194,7 +188,7 @@ const ProductByCat = (props) => {
                       <LazyLoad height={300}>
                         <img
                           src={
-                            "https://admin.sportmix.uz/uploads/" + product.image
+                            apiUrl + "uploads/" + product.image
                           }
                           alt=""
                         />
@@ -359,7 +353,7 @@ const ProductByCat = (props) => {
                       <img
                         className="brandLogo"
                         key={i}
-                        src={api + "/uploads/" + brand.image}
+                        src={apiUrl + "uploads/" + brand.image}
                         alt={brand.name}
                       />{" "}
                       <div className="brandName">{brand.name}</div>

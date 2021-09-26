@@ -25,7 +25,7 @@ function App() {
   //admin
   useEffect(() => {
     async function getAdmins() {
-      const response = await axios.get("https://admin.sportmix.uz/api/admins");
+      const response = await axios.get("https://admin.sport-mix.uz/api/admins");
       setAdmin(response.data);
     }
     getAdmins();
@@ -33,7 +33,7 @@ function App() {
   //products
   useEffect(() => {
     async function getProducts() {
-      const response = await axios.get("https://admin.sportmix.uz/api/products");
+      const response = await axios.get("https://admin.sport-mix.uz/api/products");
       setProduct(response.data.reverse());
     }
     getProducts();
@@ -41,7 +41,7 @@ function App() {
   //categories
   useEffect(() => {
     async function getCategories() {
-      const response = await axios.get("https://admin.sportmix.uz/api/categories");
+      const response = await axios.get("https://admin.sport-mix.uz/api/categories");
       setCategory(response.data);
     }
     getCategories();
@@ -49,19 +49,16 @@ function App() {
   //brands
   useEffect(() => {
     async function getBrands() {
-      const response = await axios.get("https://admin.sportmix.uz/api/brands");
+      const response = await axios.get("https://admin.sport-mix.uz/api/brands");
       setBrands(response.data);
     }
     getBrands();
   }, []);
 
-
-
   return (
     <>
       <BrowserRouter >
         <Switch >
-
           <Route exact path="/" >
             < Home product={product} category={category} brands={brands} />
           </Route>

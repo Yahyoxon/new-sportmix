@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Navbar, Form } from "react-bootstrap";
-import Calculator from "../components/Calculator/Calculator";
 import { Link, useParams } from "react-router-dom";
-// import cardImage from "../assets/card.png";
-// import cartPasport from "../assets/passport.jpg";
 import { VscClose } from "react-icons/vsc";
 import '../components/Product/product.scss'
 import LazyLoad from 'react-lazyload';
@@ -11,7 +8,7 @@ import LazyLoad from 'react-lazyload';
 
 
 const HomeByBrand = (props) => {
-  const api = "https://admin.sportmix.uz";
+  const apiUrl = "https://admin.sport-mix.uz/";
   const [selectedProduct, setselectedProduct] = useState([]);
   const [order, setOrder] = useState([]);
   const [prodOrder, setProdOrder] = useState([]);
@@ -28,7 +25,6 @@ const HomeByBrand = (props) => {
   const [notFound, setNotFound] = useState();
   const [activePageData, setActivePageData] = useState([]);
   const { id } = useParams();
-  // console.log(id)
   useEffect(() => {
     window.scroll(0, 0)
   }, [id]);
@@ -46,7 +42,7 @@ const HomeByBrand = (props) => {
   const onSubmitModal = (e) => {
     e.preventDefault();
     let api = new XMLHttpRequest();
-    var forSend = `🏪 Магазин: ${prodOrder}%0A💵 Наличными%0A%0A👥Имя: ${clientName}%0A📞Тел: ${clientphoneNumber}%0A📦Товар: ${order}%0A💵Итого: ${orderPriceSplite} сум%0A📍 Регион: ${region}%0A🖇 Количество: ${quantity}%0A%0A https://admin.sportmix.uz/uploads/${selectedProduct.image}`;
+    var forSend = `🏪 Магазин: ${prodOrder}%0A💵 Наличными%0A%0A👥Имя: ${clientName}%0A📞Тел: ${clientphoneNumber}%0A📦Товар: ${order}%0A💵Итого: ${orderPriceSplite} сум%0A📍 Регион: ${region}%0A🖇 Количество: ${quantity}%0A%0A ${apiUrl + "uploads/" + selectedProduct.image}`;
     var token = "1745885286:AAGnCac1rJJnQI2XIAUW8LL2_RN2MHN-SVE";
     var url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_ID}&text=${forSend}`;
     api.open("GET", url, true);
@@ -107,7 +103,7 @@ const HomeByBrand = (props) => {
                         <img
                           className="brandLogo"
                           key={i}
-                          src={api + "/uploads/" + brand.image}
+                          src={apiUrl + "uploads/" + brand.image}
                           alt={brand.name}
                         />
                         <div className="brandName">{brand.name}</div>
@@ -129,11 +125,11 @@ const HomeByBrand = (props) => {
           </Row>
         </Container>
       </div>
-      <Calculator
+      {/* <Calculator
         brands={props.brands}
         CalcProductDB={props.product}
         selectedProduct={selectedProduct}
-      />
+      /> */}
       <Container>
         <Row>
           <Col>
@@ -150,7 +146,7 @@ const HomeByBrand = (props) => {
                       className="imgBoxCat"
                     >
                       <div className="circle"></div>
-                      <img src={api + "/uploads/" + categories.image} alt="" />
+                      <img src={apiUrl + "uploads/" + categories.image} alt="" />
                     </div>
                     <div className="CatText">{categories.name}</div>
                   </Link>
@@ -193,7 +189,7 @@ const HomeByBrand = (props) => {
                         <div className="imgBox">
                           <LazyLoad height={300}>
                             <img
-                              src={api + "/uploads/" +
+                              src={apiUrl + "uploads/" +
                                 product.image
                               }
                               alt=""
@@ -231,7 +227,7 @@ const HomeByBrand = (props) => {
                                     Заказать
                                   </Button>
                                 </div>
-                              ) : ("")}
+                              ) : ("product.order_type === order is not equal")}
                               {product.order_type === "all" ||
                                 product.order_type === "" ||
                                 product.order_type === "installment" ? (
@@ -355,29 +351,27 @@ const HomeByBrand = (props) => {
                       <img
                         className="brandLogo"
                         key={i}
-                        src={api + "/uploads/" + brand.image}
+                        src={apiUrl + "uploads/" + brand.image}
                         alt={brand.name}
-                      />{" "}
+                      />
                       <div className="brandName">{brand.name}</div>
                     </div>
                   ) : (
-                    console.log("")
+                    console.log("id === brand.link is not equal")
                   );
                 })}
               </div>
             </Col>
             <Col lg="4" md="4" sm="12">
               <div className="bezperviynachalnovo-vzos">
-                
+
               </div>
             </Col>
             <Col lg="4" md="4" sm="12">
               <div className="left-footer-box">
                 <div className="footerCardImg">
-                  {/* <img src={cardImage} alt="" /> */}
                 </div>
                 <div className="footerCardImg2">
-                  {/* <img src={cartPasport} alt="" /> */}
                 </div>
                 <div className="footerText">
                 </div>
