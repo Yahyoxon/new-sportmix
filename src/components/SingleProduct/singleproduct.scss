@@ -1,0 +1,260 @@
+@mixin media($mw: 1200px) {
+  @media screen and (max-width: $mw) {
+    @content;
+  }
+}
+
+.viewComponent {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .title {
+    font-family: Open Sans;
+    font-size: 35px;
+  }
+
+  .price {
+    font-family: Open Sans;
+    font-size: 25px;
+    margin-bottom: 0;
+  }
+
+  .desc {
+    font-family: Open Sans;
+    font-size: 18px;
+    white-space: pre-line;
+  }
+
+  .centeredCol {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+
+    a {
+      margin-bottom: 20px;
+      width: 100%;
+    }
+  }
+
+  .oneImage {
+    width: 100%;
+    max-width: 350px;
+  }
+}
+
+#root {
+  height: 100%
+}
+
+html,
+body {
+  position: relative;
+  height: 100%;
+}
+
+body {
+  background: #eee;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #000;
+  margin: 0;
+  padding: 0;
+}
+
+.images-gallery {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    max-width: 100px;
+    width: 100%;
+    min-height: 100px;
+    border: 1px solid #b7b7b7;
+    margin: 5px;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.brandsBox {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  margin: 10px 0;
+
+  a {
+    text-decoration: none !important;
+    color: #000;
+  }
+
+  .imageBoxSingle {
+    max-width: 50px;
+    min-height: 50px;
+
+    img {
+      width: 100%;
+      border-radius: 15px;
+    }
+
+  }
+
+  .brand {
+    font-size: 20px;
+    font-weight: 500;
+    margin-left: 10px;
+  }
+
+}
+
+.singleProductButtons {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+// .divPriceInfo {
+//   display: flex;
+//   align-items: center;
+//   justify-content: flex-start;
+// }
+
+// .priceBlock {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-bottom: 1rem;
+// }
+
+.orderButton {
+  // width: 100%;
+  margin-left: 35px;
+  background: orange;
+  border-color: #000;
+  color: #000 !important;
+
+  &:hover {
+    border-color: #000;
+    background: #fff;
+  }
+}
+
+.modalSection {
+  position: relative;
+}
+
+.modalSectionHidden {
+  position: relative;
+  display: none;
+}
+
+.mainModalContainer {
+  background: #fff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 400px;
+  width: 90% !important;
+  height: 300px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  margin: 10px auto;
+  z-index: 99999;
+}
+
+.inputFormBox {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.textsModalForm {
+  width: 100%;
+  line-height: 30px;
+  font-size: 16px;
+  padding-left: 8px;
+  font-family: 'Open Sans';
+  font-weight: 500;
+  margin: 10px auto;
+}
+
+.closeBtn {
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.buttonModal {
+  margin-top: 5px;
+  font-size: 20px;
+  background: #000;
+  color: #fff;
+  width: 100%;
+  padding: 6px;
+  border: none !important;
+  border-radius: 4px;
+}
+
+.forHidden {
+  display: none;
+}
+
+.orderr {
+  width: 100%;
+}
+
+.magazine {
+  padding: 0px 12px;
+  margin-top: 30px;
+  font-size: 24px;
+  font-weight: 600;
+
+  @include media(770px) {
+    font-size: 20px;
+  }
+
+}
+
+.modalSuccessSubmit {
+  z-index: 9999;
+  position: fixed;
+  background-color: #fff;
+  box-sizing: border-box;
+  width: 90% !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 460px !important;
+  margin: 0 auto;
+  border-radius: 4px;
+  padding: 105px 38px 20px 38px;
+  text-align: center;
+  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.25);
+}
+
+.closeBtn {
+  transform: scale(1.4);
+}
+
+.zakazatButton {
+  width: 100%;
+  margin-bottom: 5px;
+
+  &:hover {
+    color: #000;
+    background: white;
+  }
+}
