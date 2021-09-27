@@ -58,7 +58,7 @@ function App() {
   return (
     <>
       <BrowserRouter >
-        <Switch >
+        <Switch>
           <Route exact path="/" >
             < Home product={product} category={category} brands={brands} />
           </Route>

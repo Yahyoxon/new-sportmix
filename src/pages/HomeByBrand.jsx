@@ -207,6 +207,7 @@ const HomeByBrand = (props) => {
                             </p>
                             <div className="bottomButtons">
                               {product.order_type === "all" ||
+                                product.order_type === "none" ||
                                 product.order_type === "" ||
                                 product.order_type === "order" ? (
                                 <div
@@ -227,7 +228,7 @@ const HomeByBrand = (props) => {
                                     Заказать
                                   </Button>
                                 </div>
-                              ) : ("product.order_type === order is not equal")}
+                              ) : null}
                               {product.order_type === "all" ||
                                 product.order_type === "" ||
                                 product.order_type === "installment" ? (
@@ -237,7 +238,7 @@ const HomeByBrand = (props) => {
                                   href="#calcBox"
                                 >
                                   Рассрочку
-                                </Button>) : ("")}
+                                </Button>) : null}
                             </div>
                           </div>
                         </div>
@@ -357,7 +358,7 @@ const HomeByBrand = (props) => {
                       <div className="brandName">{brand.name}</div>
                     </div>
                   ) : (
-                    console.log("id === brand.link is not equal")
+                    null
                   );
                 })}
               </div>

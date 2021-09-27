@@ -157,7 +157,7 @@ const Calculator = (props) => {
                 name="month"
                 id="month"
               >
-                <option value="12">12 месяц</option>
+                <option selected value="12">12 месяц</option>
                 <option value="9">9 месяц</option>
                 <option value="6">6 месяц</option>
                 <option value="3">3 месяц</option>
