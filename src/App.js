@@ -41,7 +41,7 @@ function App() {
   //categories
   useEffect(() => {
     async function getCategories() {
-      const response = await axios.get("https://admin.sport-mix.uz/api/categories");
+      const response = await axios.get("https://api.sport-mix.uz/api/categories/read");
       setCategory(response.data);
     }
     getCategories();

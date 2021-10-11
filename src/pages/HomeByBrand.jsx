@@ -146,7 +146,7 @@ const HomeByBrand = (props) => {
                       className="imgBoxCat"
                     >
                       <div className="circle"></div>
-                      <img src={apiUrl + "uploads/" + categories.image} alt="" />
+                      <img src={categories.image} alt="" />
                     </div>
                     <div className="CatText">{categories.name}</div>
                   </Link>

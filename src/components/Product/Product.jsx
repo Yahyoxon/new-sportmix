@@ -103,7 +103,7 @@ const Product = (props) => {
                   <Link to={`/categories/${categories.link}`}>
                     <div className="imgBoxCat">
                       <div className="circle"></div>
-                      <img src={uploadURL + categories.image} alt="" />
+                      <img src={categories.image} alt="" />
                     </div>
                   </Link>
                   <div className="CatText">{categories.name}</div>
