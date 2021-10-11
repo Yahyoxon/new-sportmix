@@ -99,15 +99,19 @@ const Product = (props) => {
           {props.category.map((categories, i) => {
             return (
               <Col key={i} lg="2" md="3" sm="3" xs="3">
-                <div className="catBox">
-                  <Link to={`/categories/${categories.link}`}>
-                    <div className="imgBoxCat">
-                      <div className="circle"></div>
-                      <img src={categories.image} alt="" />
-                    </div>
-                  </Link>
-                  <div className="CatText">{categories.name}</div>
-                </div>
+                <LazyLoad height={300}>
+                  <div className="catBox">
+                    <Link to={`/categories/${categories.link}`}>
+                      <div className="imgBoxCat">
+                        <div className="circle"></div>
+                        <img src={categories.image} alt="" />
+                      </div>
+                    </Link>
+                    <Link to={`/categories/${categories.link}`}>
+                      <div className="CatText">{categories.name}</div>
+                    </Link>
+                  </div>
+                </LazyLoad>
               </Col>
             );
           })}
