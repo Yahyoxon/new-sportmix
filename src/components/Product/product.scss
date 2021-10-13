@@ -40,7 +40,7 @@
   align-items: center;
   max-width: 400px;
   width: 90% !important;
-  height: 400px!important;
+  height: 400px !important;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   margin: 10px auto;
   z-index: 99999;
@@ -85,18 +85,21 @@
 .forHidden {
   display: none;
 }
-.orderr{
+
+.orderr {
   width: 100%;
 }
+
 .magazine {
   padding: 0px 12px;
   margin-top: 30px;
   font-size: 24px;
   font-weight: 600;
+
   @include media(770px) {
     font-size: 20px;
   }
-  
+
 }
 
 .modalSuccessSubmit {
@@ -153,7 +156,7 @@
     .imgBox {
       .moreInfo {
         bottom: 0;
-        transition:0.2s;
+        transition: 0.2s;
       }
     }
 
@@ -191,12 +194,14 @@
       position: absolute;
       bottom: -60px;
       background: #303030a8;
-      transition:0.2s;
+      transition: 0.2s;
       font-family: "Open Sans";
+
       @include media(770px) {
-        font-size: 10px!important;
+        font-size: 10px !important;
         max-height: 30px;
       }
+
       &:hover {
         a {
           transform: scale(1.2);
@@ -279,7 +284,8 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  a{
+
+  a {
     color: #000;
     text-decoration: none;
   }
@@ -301,60 +307,48 @@
 }
 
 .imgBoxCat {
-  max-width: 130px;
-  max-height: 130px;
+  width: 130px;
+  height: 130px;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  padding-top: 120px;
+  @include media(770px) {
+    max-width: 90px;
+    max-height: 90px;
+    padding: 0px;
+
+  }
 
   img {
-    width: 100%;
-    max-width: 130px;
-    max-height: 130px;
     height: 100%;
-    position: relative;
-    z-index: 44;
-    transition: 0.2s;
-  }
-
-  &:active {
-    img {
-      transform: scale(0.95);
-      transition: 0.2s;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 444;
+    @include media(770px) {
+      max-width: 90px;
+      max-height: 90px;
+      padding: 0px;
+  
     }
   }
 
-  &:hover {
-    .circle {
-      // animation: scale 1s infinite;
-      transition: 0.2s;
-      width: 95%;
-      height: 95%;
-    }
-  }
 
   .circle {
-    // position: absolute;
-    // width: 90%;
-    // height: 90%;
-    // background: rgb(236, 236, 236);
-    // border-radius: 50%;
-    // z-index: 33;
-    // transition: 0.2s;
-
-    &::before {
-      // content: '';
-      // position: absolute;
-      // top: 5px;
-      // left: 5px;
-      // right: 5px;
-      // bottom: 5px;
-      // background: rgb(228, 228, 228);
-      // border-radius: 50%;
-
-    }
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    height: 100%;
+    width: 100%;
+    z-index: 44;
+    background: #ffd400 !important;
+    border-radius: 100% !important;
   }
 
 
@@ -375,13 +369,13 @@
 }
 
 .kategoriy {
-  margin-top: 30px;
+  margin-top: 20px;
   font-size: 24px;
   font-weight: 600;
 
   @include media(770px) {
     font-size: 20px;
-
+    margin-top: 10px;
   }
 }
 
@@ -398,11 +392,13 @@
   background: orange !important;
   color: #000 !important;
 }
-.searchContainer{
+
+.searchContainer {
   display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    .searchInput{
+  justify-content: flex-end;
+  align-items: center;
+
+  .searchInput {
     width: 300px;
     padding: .375rem .75rem;
     font-size: 1rem;
@@ -415,26 +411,31 @@
     -webkit-appearance: none;
     appearance: none;
     border-radius: .25rem;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
     @include media(770px) {
       width: 100%;
     }
+  }
 }
-}
+
 .tovari {
   font-size: 24px;
   font-weight: 600;
+
   @include media(770px) {
     font-size: 20px;
   }
 }
-.tovariorder{
+
+.tovariorder {
   @include media(770px) {
-    order:2;
+    order: 2;
   }
 }
-.searchorder{
+
+.searchorder {
   @include media(770px) {
-    order:1;
+    order: 1;
   }
 }

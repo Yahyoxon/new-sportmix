@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { VscClose } from "react-icons/vsc";
 import '../components/Product/product.scss'
 import LazyLoad from 'react-lazyload';
-
+import  '../components/Calculator/calculator.scss'
 
 
 const HomeByBrand = (props) => {
@@ -140,7 +140,6 @@ const HomeByBrand = (props) => {
           {props.category.map((categories, i) => {
             return (
               <Col key={i} lg="2" md="3" sm="3" xs="3">
-                <LazyLoad height={300}>
                   <div className="catBox">
                     <Link to={`/${id}/${categories.link}`}>
                       <div
@@ -154,7 +153,6 @@ const HomeByBrand = (props) => {
                       <div className="CatText">{categories.name}</div>
                     </Link>
                   </div>
-                </LazyLoad>
               </Col>
             );
           })}

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { VscClose } from "react-icons/vsc";
 import logo from "../../sportmix-logo.png";
 import LazyLoad from 'react-lazyload';
+import  '../Calculator/calculator.scss'
 
 const ProductByCat = (props) => {
   const apiUrl = "https://admin.sport-mix.uz/";

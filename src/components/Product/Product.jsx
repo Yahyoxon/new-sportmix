@@ -6,6 +6,9 @@ import "swiper/swiper.min.css";
 import { Link } from "react-router-dom";
 import { VscClose } from "react-icons/vsc";
 import LazyLoad from 'react-lazyload';
+import '../Calculator/calculator.scss'
+// import { Skeleton } from 'react-skeleton-generator';
+
 
 const Product = (props) => {
   const uploadURL = "https://admin.sport-mix.uz/uploads/";
@@ -99,19 +102,19 @@ const Product = (props) => {
           {props.category.map((categories, i) => {
             return (
               <Col key={i} lg="2" md="3" sm="3" xs="3">
-                <LazyLoad height={300}>
-                  <div className="catBox">
-                    <Link to={`/categories/${categories.link}`}>
+                <div className="catBox">
+                  <Link to={`/categories/${categories.link}`}>
+                    {/* <LazyLoad height={100}> */}
                       <div className="imgBoxCat">
-                        <div className="circle"></div>
                         <img src={categories.image} alt="" />
+                        <div className="circle"></div>
                       </div>
-                    </Link>
-                    <Link to={`/categories/${categories.link}`}>
-                      <div className="CatText">{categories.name}</div>
-                    </Link>
-                  </div>
-                </LazyLoad>
+                    {/* </LazyLoad> */}
+                  </Link>
+                  <Link to={`/categories/${categories.link}`}>
+                    <div className="CatText">{categories.name}</div>
+                  </Link>
+                </div>
               </Col>
             );
           })}
