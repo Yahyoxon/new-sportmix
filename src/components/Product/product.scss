@@ -135,7 +135,7 @@
   border-radius: 5px;
   padding: 5px;
   transition: 0.2s;
-  min-height: 500px;
+  min-height: 400px;
   display: flex;
   justify-content: space-between;
   align-items: inherit;
@@ -143,6 +143,9 @@
 
   @include media(770px) {
     min-height: 400px;
+  }
+  @media (min-width: 768px){
+    min-height: 300px;
   }
 
   @include media(660px) {
@@ -167,7 +170,7 @@
     justify-content: center;
     align-items: center;
     max-width: 100%;
-    min-height: 300px;
+    min-height: 200px;
     position: relative;
     overflow: hidden;
 
@@ -236,7 +239,7 @@
 
 .productName {
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
   font-family: "Open Sans";
 
   @include media(770px) {
@@ -354,8 +357,11 @@
 }
 
 .CatText {
+  margin-top: 5px;
+  font-family: 'Open Sans'
+  sans-serif;
   text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   position: relative;
   z-index: 40;
@@ -436,5 +442,32 @@
 .searchorder {
   @include media(770px) {
     order: 1;
+  }
+}
+.show-more-button{
+  font-family: 'Open Sans'
+  sans-serif;
+  cursor: pointer;
+  font-size: 18px;
+  text-align: right;
+  width: 100%;
+  margin-top: 20px;
+  font-weight: 300;
+  color: #555555;
+  @include media(770px) {
+    font-size: 16px;
+    margin-top: 15px;
+  }
+
+}
+.row{
+  .col-lg-5x5{
+    width: 20%;
+    @include media(770px) {
+      width: 50%;
+    }
+    @media (min-width: 768px){
+    
+    }
   }
 }

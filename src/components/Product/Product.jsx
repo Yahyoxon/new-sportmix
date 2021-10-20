@@ -7,8 +7,6 @@ import { Link } from "react-router-dom";
 import { VscClose } from "react-icons/vsc";
 import LazyLoad from 'react-lazyload';
 import '../Calculator/calculator.scss'
-// import { Skeleton } from 'react-skeleton-generator';
-
 
 const Product = (props) => {
   const uploadURL = "https://admin.sport-mix.uz/uploads/";
@@ -27,6 +25,7 @@ const Product = (props) => {
   const [wordEntered, setWordEntered] = useState("");
   const [notFound, setNotFound] = useState();
   const [activePageData, setActivePageData] = useState([]);
+  const [IsShowMore, setIsShowMore] = useState(false)
 
   //  filter brands
   var chat_ID = "-1001247339615";
@@ -85,40 +84,70 @@ const Product = (props) => {
     };
     handleProductActive();
   }, [props.product]);
+
+  //categories show more
+  let categories = props.category.slice(0, 12)
+  const showMoreCat = () => {
+    setIsShowMore(!IsShowMore)
+    window.scrollTo(0, 100);
+  }
+
   return (
     <>
-      {/* <Calculator
-        brands={props.brands}
-        CalcProductDB={props.product}
-        selectedProduct={selectedProduct}
-      /> */}
       <Container>
         <Row>
           <Col>
             <div className="kategoriy">Категории</div>
           </Col>
+          <Col><div className="show-more-button" onClick={showMoreCat}>{IsShowMore ? "Скрыть категории" : "Все категории"}<span>{" >>"}</span></div></Col>
         </Row>
         <Row>
-          {props.category.map((categories, i) => {
-            return (
-              <Col key={i} lg="2" md="3" sm="3" xs="3">
-                <div className="catBox">
-                  <Link to={`/categories/${categories.link}`}>
-                    {/* <LazyLoad height={100}> */}
+          {IsShowMore ?
+            props.category.map((categories, i) => {
+              return (
+                <Col key={i} lg="2" md="3" sm="3" xs="3">
+                  <div className="catBox">
+                    <Link to={`/categories/${categories.link}`}>
+                      {/* <LazyLoad height={100}> */}
                       <div className="imgBoxCat">
                         <img src={categories.image} alt="" />
                         <div className="circle"></div>
                       </div>
-                    {/* </LazyLoad> */}
-                  </Link>
-                  <Link to={`/categories/${categories.link}`}>
-                    <div className="CatText">{categories.name}</div>
-                  </Link>
-                </div>
-              </Col>
-            );
-          })}
+                      {/* </LazyLoad> */}
+                    </Link>
+                    <Link to={`/categories/${categories.link}`}>
+                      <div className="CatText">{categories.name}</div>
+                    </Link>
+                  </div>
+                </Col>
+              );
+            }) :
+            categories.map((categories, i) => {
+              return (
+                <Col key={i} lg="2" md="3" sm="3" xs="3">
+                  <div className="catBox">
+                    <Link to={`/categories/${categories.link}`}>
+                      {/* <LazyLoad height={100}> */}
+                      <div className="imgBoxCat">
+                        <img src={categories.image} alt="" />
+                        <div className="circle"></div>
+                      </div>
+                      {/* </LazyLoad> */}
+                    </Link>
+                    <Link to={`/categories/${categories.link}`}>
+                      <div className="CatText">{categories.name}</div>
+                    </Link>
+                  </div>
+                </Col>
+              );
+            })
+          }
         </Row>
+        {IsShowMore ?(
+          <Row>
+            <Col><div className="show-more-button" onClick={showMoreCat}>{IsShowMore ? "Скрыть категории" : "Все категории"}<span>{" >>"}</span></div></Col>
+          </Row>):''
+}
       </Container>
       <div className="productComponent">
         <Container>
@@ -146,7 +175,7 @@ const Product = (props) => {
               (filteredData ? filteredData : activePageData).map(
                 (product, i) => (
                   <Col
-                    lg="3"
+                    lg="5x5"
                     md="4"
                     xs="6"
                     key={i}
