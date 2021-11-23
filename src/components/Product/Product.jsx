@@ -7,6 +7,11 @@ import { Link } from "react-router-dom";
 import { VscClose } from "react-icons/vsc";
 import LazyLoad from 'react-lazyload';
 import '../Calculator/calculator.scss'
+import { generatePath } from "react-router";
+const productLink = generatePath("/user/:id/:entity(posts|comments)", {
+  id: 1,
+  entity: "posts"
+});
 
 const Product = (props) => {
   const uploadURL = "https://admin.sport-mix.uz/uploads/";
@@ -173,7 +178,9 @@ const Product = (props) => {
               ? notFound
               : activePageData &&
               (filteredData ? filteredData : activePageData).map(
-                (product, i) => (
+                (product, i) => {
+                  // let prodLink = generatePath("/product/:id/:entity", {id: product.id,entity: "posts"})
+                  return(
                   <Col
                     lg="5x5"
                     md="4"
@@ -187,6 +194,7 @@ const Product = (props) => {
                           <img src={uploadURL + product.image} alt="" />
                         </LazyLoad>
                         <div className="moreInfo">
+                          {/* <Link to={prodLink}>подробные</Link> */}
                           <Link to={`/product/${product.id}`}>подробные</Link>
                         </div>
                       </div>
@@ -240,7 +248,7 @@ const Product = (props) => {
                       </div>
                     </div>
                   </Col>
-                )
+                )}
               )}
           </Row>
           <Row>

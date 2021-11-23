@@ -9,6 +9,7 @@ const SingleProduct = ({ product, brands }) => {
   const apiUrl = "https://admin.sport-mix.uz/"
   const history = useHistory();
   const { id } = useParams();
+  const { oqim } = useParams();
   const [order, setOrder] = useState([]);
   const [singleProductBrand, setSingleProductBrand] = useState({});
   const [prodOrder, setProdOrder] = useState([]);
@@ -18,7 +19,8 @@ const SingleProduct = ({ product, brands }) => {
   const [quantity, setQuantity] = useState("1");
   const [productImage, setProductImage] = useState("");
   const [clientphoneNumber, setPhoneNumber] = useState("");
-  // const [openModalClass, setOpenModalClass] = useState("modalSectionHidden");
+
+  console.log(oqim)
   const [successModal, setSuccessModal] = useState("forHidden");
   const orderPriceSplite = Number(prodOrderPrice).toLocaleString();
   useEffect(() => {

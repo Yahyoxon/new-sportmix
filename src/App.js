@@ -62,7 +62,9 @@ function App() {
           <Route exact path="/" >
             < Home product={product} category={category} brands={brands} />
           </Route>
-
+          <Route path="/product/:id/:oqim" >
+            <SinglePage product={product} category={category} brands={brands} />
+          </Route>
           <Route path="/product/:id" >
             <SinglePage product={product} category={category} brands={brands} />
           </Route>
