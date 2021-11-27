@@ -3,7 +3,7 @@ import { Button, Col, Container, Row, Navbar, Form } from "react-bootstrap";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { VscClose } from "react-icons/vsc";
-import logo from "../../sportmix-logo.png";
+import logo from "../../logo.svg";
 import LazyLoad from 'react-lazyload';
 import  '../Calculator/calculator.scss'
 

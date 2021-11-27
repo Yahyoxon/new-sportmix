@@ -3,7 +3,7 @@ import React from "react";
 // import cartPasport from "../../assets/passport.jpg";
 import { Container, Row, Col } from "react-bootstrap";
 import "./footer.scss";
-import logo from "../../sportmix-logo.png";
+import logo from "../../logo.svg";
 
 const Footer = () => {
   return (

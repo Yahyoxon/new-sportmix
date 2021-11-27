@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Navbar, Button, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./header.css";
-import logo from "../../sportmix-logo.png";
+import logo from "../../logo.svg";
 
 const Header = () => {
   const refreshPage = () => {
