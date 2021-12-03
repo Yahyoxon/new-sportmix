@@ -33,7 +33,7 @@ function App() {
   //products
   useEffect(() => {
     async function getProducts() {
-      const response = await axios.get("https://admin.sport-mix.uz/api/products");
+      const response = await axios.get("https://api.sport-mix.uz/api/products/read");
       setProduct(response.data.reverse());
     }
     getProducts();
@@ -49,7 +49,7 @@ function App() {
   //brands
   useEffect(() => {
     async function getBrands() {
-      const response = await axios.get("https://admin.sport-mix.uz/api/brands");
+      const response = await axios.get("https://api.sport-mix.uz/api/brands/read");
       setBrands(response.data);
     }
     getBrands();

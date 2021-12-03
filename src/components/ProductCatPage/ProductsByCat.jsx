@@ -4,13 +4,12 @@ import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { VscClose } from "react-icons/vsc";
 import logo from "../../logo.svg";
-import LazyLoad from 'react-lazyload';
-import  '../Calculator/calculator.scss'
+import LazyLoad from "react-lazyload";
+import "../Calculator/calculator.scss";
+import axios from "axios";
 
-const ProductByCat = (props) => {
-  const apiUrl = "https://admin.sport-mix.uz/";
+const ProductsByCat = (props) => {
   const { link } = useParams();
-  const { id } = useParams();
   const [selectedProduct, setselectedProduct] = useState([]);
   const [order, setOrder] = useState([]);
   const [prodOrder, setProdOrder] = useState([]);
@@ -21,33 +20,37 @@ const ProductByCat = (props) => {
   const [clientphoneNumber, setPhoneNumber] = useState("");
   const [openModalClass, setOpenModalClass] = useState("modalSectionHidden");
   const [successModal, setSuccessModal] = useState("forHidden");
-  const orderPriceSplite = Number(prodOrderPrice).toLocaleString();
   const [filteredData, setFilteredData] = useState();
   const [wordEntered, setWordEntered] = useState("");
   const [notFound, setNotFound] = useState();
-  const [activePageData, setActivePageData] = useState([]);
 
-  var chat_ID = "-1001247339615";
-
-  for (let i = 0; i < props.brandsProps.length; i++) {
-    if (selectedProduct.brand_name === props.brandsProps[i].link) {
-      chat_ID = props.brandsProps[i].telegram_chat_id || "-1001247339615";
-    }
-  }
   /// send telegram group
 
-  const onSubmitModal = (e) => {
+  const onSubmitModal = async (e) => {
     e.preventDefault();
-    let api = new XMLHttpRequest();
-    var forSend = `🏪 Магазин: ${prodOrder}%0A💵 Наличными%0A%0A👥Имя: ${clientName}%0A📞Тел: ${clientphoneNumber}%0A📦Товар: ${order}%0A💵Итого: ${orderPriceSplite} сум%0A📍 Регион: ${region}%0A🖇 Количество: ${quantity}%0A%0A ${apiUrl + "upload/" + selectedProduct.image}`;
-    var token = "1745885286:AAGnCac1rJJnQI2XIAUW8LL2_RN2MHN-SVE";
-    var url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_ID}&text=${forSend}`;
-    api.open("GET", url, true);
-    api.send();
-    setName("");
-    setPhoneNumber("");
-    setSuccessModal("modalSuccessSubmit");
-    setOpenModalClass("forHidden");
+    const response = await axios.post(
+      "https://api.sport-mix.uz/api/order/create",
+      {
+        product: order,
+        username: clientName,
+        phone: clientphoneNumber,
+        region: region,
+        quantity: quantity,
+        cashback: 0,
+        total_price: prodOrderPrice,
+        brand_name: prodOrder,
+        image: selectedProduct.images[0],
+        oqim: null,
+      }
+    );
+    if ((response.data = "true")) {
+      setName("");
+      setPhoneNumber("");
+      setRegion("");
+      setQuantity("");
+      setSuccessModal("modalSuccessSubmit");
+      setOpenModalClass("forHidden");
+    }
   };
   //search
   const handleFilter = (event) => {
@@ -63,38 +66,14 @@ const ProductByCat = (props) => {
       setFilteredData(searchResult);
     }
     if (searchResult.length === 0) {
-      setNotFound(
-        <h5 style={{ textAlign: "center" }}>Ничего не найдено :(</h5>
-      );
+      setNotFound("Ничего не найдено :(");
     }
   };
   useEffect(() => {
     setNotFound();
   }, [wordEntered]);
 
-  let ProductByBrand = [];
-  if (id) {
-    for (let index = 0; index < props.selectedProductProps.length; index++) {
-      if (id === props.selectedProductProps[index].brand_name) {
-        ProductByBrand[index] = props.selectedProductProps[index];
-      }
-    }
-  } else {
-    ProductByBrand = props.selectedProductProps;
-  }
 
-  useEffect(() => {
-    const handleProductActive = () => {
-      const activeProducts = [];
-      for (let l = 0; l < props.selectedProductProps.length; l++) {
-        if (props.selectedProductProps[l].order_type !== "none") {
-          activeProducts[l] = props.selectedProductProps[l];
-          setActivePageData(activeProducts);
-        }
-      }
-    };
-    handleProductActive();
-  }, [props.selectedProductProps]);
   return (
     <>
       <div className="headerContent">
@@ -103,29 +82,11 @@ const ProductByCat = (props) => {
             <Col>
               <Navbar expand="lg">
                 <Navbar.Brand className="logoBox">
-                  {id ? (
-                    props.brandsProps.map((brand, i) => {
-                      return id === brand.link ? (
-                        <div className="brandContent" key={i}>
-                          <img
-                            className="brandLogo"
-                            key={i}
-                            src={apiUrl + "uploads/" + brand.image}
-                            alt={brand.name}
-                          />
-                          <div className="brandName">{brand.name}</div>
-                        </div>
-                      ) : (
-                        ""
-                      );
-                    })
-                  ) : (
                     <Link to="/">
                       <div className="logoBox">
                         <img src={logo} alt="logo" />
                       </div>
                     </Link>
-                  )}
                 </Navbar.Brand>
               </Navbar>
             </Col>
@@ -139,13 +100,8 @@ const ProductByCat = (props) => {
           </Row>
         </Container>
       </div>
-      {/* <Calculator
-        brands={props.brandsProps}
-        selectedProduct={selectedProduct}
-      /> */}
-      <br />
-      <br />
-      <Container>
+      <br/>
+      <Container style={{minHeight:'80vh'}}>
         <Row>
           {props.categoriesProps.map((cat, k) => {
             return link === cat.link ? (
@@ -172,85 +128,64 @@ const ProductByCat = (props) => {
         <Row>
           {notFound
             ? notFound
-            : (filteredData
-              ? filteredData
-              : activePageData || props.activePageData
-            ).map((product, i) => {
-              return link === product.category_name ? (
-                <Col
-                  lg="3"
-                  md="4"
-                  xs="6"
-                  key={i}
-                  onClick={() => setselectedProduct(product)}
-                >
-                  <div className="procuctCard">
-                    <div className="imgBox">
-                      <LazyLoad height={300}>
-                        <img
-                          src={
-                            apiUrl + "uploads/" + product.image
-                          }
-                          alt=""
-                        />
-                      </LazyLoad>
-                      <div className="moreInfo">
-                        <Link to={`/product/${product.id}`}>подробные</Link>
-                      </div>
-                    </div>
-                    <div className="productTexts">
-                      <h2 className="productName">{product.name}</h2>
-                      <div className="priceAndbutton">
-                        <p className="productPrice">
-                          {Number(product.price).toLocaleString()} сум
-                        </p>
-                        <div className="bottomButtons">
-                          {product.order_type === "all" ||
-                            product.order_type === "" ||
-                            product.order_type === "order" ? (
-                            <div
-                              className="orderr"
-                              onClick={() => {
-                                setOpenModalClass("modalSection");
-                              }}
-                            >
-                              <Button
-                                variant="outline-dark"
-                                className="buttonkupitVrasrochka"
-                                onClick={() => {
-                                  setOrder(product.name);
-                                  setProdOrder(product.brand_name);
-                                  setProdOrderPrice(product.price);
-                                }}
-                              >
-                                Заказать
-                              </Button>
+            : (filteredData ? filteredData : props.selectedProductProps).map(
+                (product, i) => {
+                  return (
+                    link === product.category_name &&
+                    (product.installment === "order" ||
+                      product.installment === "all") && (
+                      <Col
+                        lg="5x5"
+                        md="4"
+                        xs="6"
+                        key={i}
+                        onClick={() => setselectedProduct(product)}
+                      >
+                        <div className="procuctCard">
+                          <div className="imgBox">
+                            <LazyLoad height={300}>
+                              <img src={product.images[0]} alt="" />
+                            </LazyLoad>
+                            <div className="moreInfo">
+                              <Link to={`/product/${product.id}`}>
+                                подробные
+                              </Link>
                             </div>
-                          ) : (
-                            ""
-                          )}
-                          {product.order_type === "all" ||
-                            product.order_type === "" ||
-                            product.order_type === "installment" ? (
-                            <Button
-                              variant="outline-dark"
-                              className="buttonkupitVrasrochka rassrochka"
-                              href="#calcBox"
-                            >
-                              Рассрочку
-                            </Button>
-                          ) : (
-                            ""
-                          )}
+                          </div>
+                          <div className="productTexts">
+                            <h2 className="productName">{product.name}</h2>
+                            <div className="priceAndbutton">
+                              <p className="productPrice">
+                                {Number(product.price).toLocaleString()} сум
+                              </p>
+                              <div className="bottomButtons">
+                                <div
+                                  className="orderr"
+                                  onClick={() => {
+                                    setOpenModalClass("modalSection");
+                                  }}
+                                >
+                                  <Button
+                                    variant="outline-dark"
+                                    className="buttonkupitVrasrochka"
+                                    onClick={() => {
+                                      setOrder(product.name);
+                                      setProdOrder(product.brand_name);
+                                      setProdOrderPrice(product.price);
+                                    }}
+                                  >
+                                    Заказать
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                </Col>
-              ) : (
-                ""
-              );
-            })}
+                      </Col>
+                    )
+                  );
+                }
+              )}
           <div className={openModalClass}>
             <form className="mainModalContainer" onSubmit={onSubmitModal}>
               <div
@@ -266,7 +201,6 @@ const ProductByCat = (props) => {
                 <Form.Group className="w-100">
                   <Form.Label className="w-100 mt-4">Имя</Form.Label>
                   <Form.Control
-
                     type="text"
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -285,38 +219,67 @@ const ProductByCat = (props) => {
                 </Form.Group>
                 <Form.Group className="w-100">
                   <Form.Label className="w-100">Выберите регион</Form.Label>
-                  <Form.Control as="select" onChange={(e) => setRegion(e.target.value)} required >
-                    <option selected value="Ташкент">Ташкент</option>
-                    <option value="Ташкентская область">Ташкентская область	</option>
-                    <option value="Андижанская область">Андижанская область</option>
+                  <Form.Control
+                    as="select"
+                    onChange={(e) => setRegion(e.target.value)}
+                    required
+                  >
+                    <option selected value="Ташкент">
+                      Ташкент
+                    </option>
+                    <option value="Ташкентская область">
+                      Ташкентская область
+                    </option>
+                    <option value="Андижанская область">
+                      Андижанская область
+                    </option>
                     <option value="Бухарская область">Бухарская область</option>
-                    <option value="Джизакская область">Джизакская область</option>
-                    <option value="Кашкадарьинская область">Кашкадарьинская область</option>
-                    <option value="Навоийская область">Навоийская область</option>
-                    <option value="Наманганская область">Наманганская область</option>
-                    <option value="Самаркандская область">Самаркандская область</option>
-                    <option value="Сурхандарьинская область">Сурхандарьинская область</option>
-                    <option value="Сырдарьинская область">Сырдарьинская область</option>
-                    <option value="Ферганская область">Ферганская область</option>
-                    <option value="Хорезмская область">Хорезмская область	</option>
+                    <option value="Джизакская область">
+                      Джизакская область
+                    </option>
+                    <option value="Кашкадарьинская область">
+                      Кашкадарьинская область
+                    </option>
+                    <option value="Навоийская область">
+                      Навоийская область
+                    </option>
+                    <option value="Наманганская область">
+                      Наманганская область
+                    </option>
+                    <option value="Самаркандская область">
+                      Самаркандская область
+                    </option>
+                    <option value="Сурхандарьинская область">
+                      Сурхандарьинская область
+                    </option>
+                    <option value="Сырдарьинская область">
+                      Сырдарьинская область
+                    </option>
+                    <option value="Ферганская область">
+                      Ферганская область
+                    </option>
+                    <option value="Хорезмская область">
+                      Хорезмская область
+                    </option>
                   </Form.Control>
                 </Form.Group>
                 <Form.Group className="w-100">
                   <Form.Label className="w-100">Количество</Form.Label>
-                  <Form.Control as="select" onChange={(e) => setQuantity(e.target.value)} required >
-                    <option selected value="1">1</option>
+                  <Form.Control
+                    as="select"
+                    onChange={(e) => setQuantity(e.target.value)}
+                    required
+                  >
+                    <option selected value="1">
+                      1
+                    </option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </Form.Control>
                 </Form.Group>
-                <input
-                  type="hidden"
-
-                  placeholder="product"
-                  value={order}
-                />
+                <input type="hidden" placeholder="product" value={order} />
                 <button type="submit" className="buttonModal">
                   Отправить
                 </button>
@@ -347,23 +310,15 @@ const ProductByCat = (props) => {
         <Container>
           <Row className="footer-row">
             <Col lg="4" md="4" sm="12">
-              <div className="logoBoxFooter">
-                {props.brandsProps.map((brand, i) => {
-                  return id === brand.link ? (
-                    <div className="brandContent" key={i}>
-                      <img
-                        className="brandLogo"
-                        key={i}
-                        src={apiUrl + "uploads/" + brand.image}
-                        alt={brand.name}
-                      />{" "}
-                      <div className="brandName">{brand.name}</div>
-                    </div>
-                  ) : (
-                    console.log("")
-                  );
-                })}
-              </div>
+            <Navbar expand="lg">
+                <Navbar.Brand className="logoBox">
+                    <Link to="/">
+                      <div className="logoBox">
+                        <img src={logo} alt="logo" />
+                      </div>
+                    </Link>
+                </Navbar.Brand>
+              </Navbar>
             </Col>
             <Col lg="4" md="4" sm="12">
               <div className="bezperviynachalnovo-vzos"></div>
@@ -386,4 +341,4 @@ const ProductByCat = (props) => {
   );
 };
 
-export default ProductByCat;
+export default ProductsByCat;

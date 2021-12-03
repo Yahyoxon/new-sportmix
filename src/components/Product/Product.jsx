@@ -5,16 +5,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.min.css";
 import { Link } from "react-router-dom";
 import { VscClose } from "react-icons/vsc";
-import LazyLoad from 'react-lazyload';
-import '../Calculator/calculator.scss'
-import { generatePath } from "react-router";
-const productLink = generatePath("/user/:id/:entity(posts|comments)", {
-  id: 1,
-  entity: "posts"
-});
+import LazyLoad from "react-lazyload";
+import "../Calculator/calculator.scss";
+import axios from "axios";
 
 const Product = (props) => {
-  const uploadURL = "https://admin.sport-mix.uz/uploads/";
   const [selectedProduct, setselectedProduct] = useState([]);
   const [order, setOrder] = useState([]);
   const [prodOrder, setProdOrder] = useState([]);
@@ -25,35 +20,37 @@ const Product = (props) => {
   const [clientphoneNumber, setPhoneNumber] = useState("");
   const [openModalClass, setOpenModalClass] = useState("modalSectionHidden");
   const [successModal, setSuccessModal] = useState("forHidden");
-  const orderPriceSplite = Number(prodOrderPrice).toLocaleString();
   const [filteredData, setFilteredData] = useState();
   const [wordEntered, setWordEntered] = useState("");
-  const [notFound, setNotFound] = useState();
-  const [activePageData, setActivePageData] = useState([]);
-  const [IsShowMore, setIsShowMore] = useState(false)
+  const [notFound, setNotFound] = useState("");
+  const [IsShowMore, setIsShowMore] = useState(false);
 
-  //  filter brands
-  var chat_ID = "-1001247339615";
-  for (let i = 0; i < props.brands.length; i++) {
-    if (selectedProduct.brand_name === props.brands[i].link) {
-      chat_ID = props.brands[i].telegram_chat_id || "-1001247339615";
-    }
-  }
-  /// send telegram group
+  /// send order
   const onSubmitModal = (e) => {
     e.preventDefault();
-    let api = new XMLHttpRequest();
-    var forSend = `🏪 Магазин: ${prodOrder}%0A💵 Наличными%0A%0A👥 Имя: ${clientName}%0A📞 Тел: ${clientphoneNumber}%0A📦 Товар: ${order}%0A💵 Итого: ${orderPriceSplite} сум%0A📍 Регион: ${region}%0A🖇 Количество: ${quantity}%0A%0A ${uploadURL + selectedProduct.image}`;
-    var token = "1745885286:AAGnCac1rJJnQI2XIAUW8LL2_RN2MHN-SVE";
-    var url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_ID}&text=${forSend}`;
-    api.open("GET", url, true);
-    api.send();
-    setName("");
-    setPhoneNumber("");
-    setRegion("");
-    setQuantity("");
-    setSuccessModal("modalSuccessSubmit");
-    setOpenModalClass("forHidden");
+    const response = axios.post(
+      "https://api.sport-mix.uz/api/order/create",
+      {
+        product: order,
+        username: clientName,
+        phone: clientphoneNumber,
+        region: region,
+        quantity: quantity,
+        cashback: 0,
+        total_price: prodOrderPrice,
+        brand_name: prodOrder,
+        image: selectedProduct && selectedProduct.images[0],
+        oqim: null,
+      }
+    );
+    if ((response.data = "true")) {
+      setName("");
+      setPhoneNumber("");
+      setRegion("");
+      setQuantity("");
+      setSuccessModal("modalSuccessSubmit");
+      setOpenModalClass("forHidden");
+    }
   };
   //search
   const handleFilter = (event) => {
@@ -68,34 +65,19 @@ const Product = (props) => {
       setFilteredData(searchResult);
     }
     if (searchResult.length === 0) {
-      setNotFound(
-        <h5 style={{ textAlign: "center" }}>Ничего не найдено :(</h5>
-      );
+      setNotFound("Ничего не найдено :(");
     }
   };
   useEffect(() => {
     setNotFound();
   }, [wordEntered]);
 
-  useEffect(() => {
-    const handleProductActive = () => {
-      const activeProducts = [];
-      for (let l = 0; l < props.product.length; l++) {
-        if (props.product[l].order_type !== "none") {
-          activeProducts[l] = props.product[l];
-          setActivePageData(activeProducts);
-        }
-      }
-    };
-    handleProductActive();
-  }, [props.product]);
-
   //categories show more
-  let categories = props.category.slice(0, 12)
+  let categories = props.category.slice(0, 12);
   const showMoreCat = () => {
-    setIsShowMore(!IsShowMore)
+    setIsShowMore(!IsShowMore);
     window.scrollTo(0, 100);
-  }
+  };
 
   return (
     <>
@@ -104,55 +86,60 @@ const Product = (props) => {
           <Col>
             <div className="kategoriy">Категории</div>
           </Col>
-          <Col><div className="show-more-button" onClick={showMoreCat}>{IsShowMore ? "Скрыть категории" : "Все категории"}<span>{" >>"}</span></div></Col>
+          <Col>
+            <div className="show-more-button" onClick={showMoreCat}>
+              {IsShowMore ? "Скрыть категории" : "Все категории"}
+              <span>{" >>"}</span>
+            </div>
+          </Col>
         </Row>
         <Row>
-          {IsShowMore ?
-            props.category.map((categories, i) => {
-              return (
-                <Col key={i} lg="2" md="3" sm="3" xs="3">
-                  <div className="catBox">
-                    <Link to={`/categories/${categories.link}`}>
-                      {/* <LazyLoad height={100}> */}
-                      <div className="imgBoxCat">
-                        <img src={categories.image} alt="" />
-                        <div className="circle"></div>
-                      </div>
-                      {/* </LazyLoad> */}
-                    </Link>
-                    <Link to={`/categories/${categories.link}`}>
-                      <div className="CatText">{categories.name}</div>
-                    </Link>
-                  </div>
-                </Col>
-              );
-            }) :
-            categories.map((categories, i) => {
-              return (
-                <Col key={i} lg="2" md="3" sm="3" xs="3">
-                  <div className="catBox">
-                    <Link to={`/categories/${categories.link}`}>
-                      {/* <LazyLoad height={100}> */}
-                      <div className="imgBoxCat">
-                        <img src={categories.image} alt="" />
-                        <div className="circle"></div>
-                      </div>
-                      {/* </LazyLoad> */}
-                    </Link>
-                    <Link to={`/categories/${categories.link}`}>
-                      <div className="CatText">{categories.name}</div>
-                    </Link>
-                  </div>
-                </Col>
-              );
-            })
-          }
+          {IsShowMore
+            ? props.category.map((categories, i) => {
+                return (
+                  <Col key={i} lg="2" md="3" sm="3" xs="3">
+                    <div className="catBox">
+                      <Link to={`/categories/${categories.link}`}>
+                        <div className="imgBoxCat">
+                          <img src={categories.image} alt="" />
+                          <div className="circle"></div>
+                        </div>
+                      </Link>
+                      <Link to={`/categories/${categories.link}`}>
+                        <div className="CatText">{categories.name}</div>
+                      </Link>
+                    </div>
+                  </Col>
+                );
+              })
+            : categories.map((categories, i) => {
+                return (
+                  <Col key={i} lg="2" md="3" sm="3" xs="3">
+                    <div className="catBox">
+                      <Link to={`/categories/${categories.link}`}>
+                        <div className="imgBoxCat">
+                          <img src={categories.image} alt="" />
+                          <div className="circle"></div>
+                        </div>
+                      </Link>
+                      <Link to={`/categories/${categories.link}`}>
+                        <div className="CatText">{categories.name}</div>
+                      </Link>
+                    </div>
+                  </Col>
+                );
+              })}
         </Row>
-        {IsShowMore ?(
+        {IsShowMore && (
           <Row>
-            <Col><div className="show-more-button" onClick={showMoreCat}>{IsShowMore ? "Скрыть категории" : "Все категории"}<span>{" >>"}</span></div></Col>
-          </Row>):''
-}
+            <Col>
+              <div className="show-more-button" onClick={showMoreCat}>
+                {IsShowMore ? "Скрыть категории" : "Все категории"}
+                <span>{" >>"}</span>
+              </div>
+            </Col>
+          </Row>
+        )}
       </Container>
       <div className="productComponent">
         <Container>
@@ -174,82 +161,68 @@ const Product = (props) => {
             </Col>
           </Row>
           <Row id="products">
-            {notFound
-              ? notFound
-              : activePageData &&
-              (filteredData ? filteredData : activePageData).map(
+            {notFound ? (
+              <h5 style={{ textAlign: "center" }}>{notFound}</h5>
+            ) : (
+              (filteredData ? filteredData : props.product).map(
                 (product, i) => {
-                  // let prodLink = generatePath("/product/:id/:entity", {id: product.id,entity: "posts"})
-                  return(
-                  <Col
-                    lg="5x5"
-                    md="4"
-                    xs="6"
-                    key={i}
-                    onClick={() => setselectedProduct(product)}
-                  >
-                    <div className="procuctCard">
-                      <div className="imgBox">
-                        <LazyLoad height={300}>
-                          <img src={uploadURL + product.image} alt="" />
-                        </LazyLoad>
-                        <div className="moreInfo">
-                          {/* <Link to={prodLink}>подробные</Link> */}
-                          <Link to={`/product/${product.id}`}>подробные</Link>
-                        </div>
-                      </div>
-                      <div className="productTexts">
-                        <h2 className="productName">{product.name}</h2>
-                        <div className="priceAndbutton">
-                          <p className="productPrice">
-                            {Number(product.price).toLocaleString()} сум
-                          </p>
-                          <div className="bottomButtons">
-                            {product.order_type === "all" ||
-                              product.order_type === "" ||
-                              product.order_type === "order" ? (
-                              <div
-                                className="orderr"
-                                onClick={() => {
-                                  setOpenModalClass("modalSection");
-                                }}
-                              >
-                                <Button
-                                  width="100%"
-                                  variant="outline-dark"
-                                  className="buttonkupitVrasrochka"
+                  return (
+                    (product.installment === "order" ||
+                      product.installment === "all") && (
+                      <Col
+                        lg="5x5"
+                        md="4"
+                        xs="6"
+                        key={i}
+                        onClick={() => setselectedProduct(product)}
+                      >
+                        <div className="procuctCard">
+                          <div className="imgBox">
+                            <LazyLoad height={300}>
+                              <img src={product.images[0]} alt="" />
+                            </LazyLoad>
+                            <div className="moreInfo">
+                              <Link to={`/product/${product.id}`}>
+                                подробные
+                              </Link>
+                            </div>
+                          </div>
+                          <div className="productTexts">
+                            <h2 className="productName">{product.name}</h2>
+                            <div className="priceAndbutton">
+                              <p className="productPrice">
+                                {Number(product.price).toLocaleString()} сум
+                              </p>
+                              <div className="bottomButtons">
+                                <div
+                                  className="orderr"
                                   onClick={() => {
-                                    setOrder(product.name);
-                                    setProdOrder(product.brand_name);
-                                    setProdOrderPrice(product.price);
+                                    setOpenModalClass("modalSection");
                                   }}
                                 >
-                                  Заказать
-                                </Button>
+                                  <Button
+                                    width="100%"
+                                    variant="outline-dark"
+                                    className="buttonkupitVrasrochka"
+                                    onClick={() => {
+                                      setOrder(product.name);
+                                      setProdOrder(product.brand_name);
+                                      setProdOrderPrice(product.price);
+                                    }}
+                                  >
+                                    Заказать
+                                  </Button>
+                                </div>
                               </div>
-                            ) : (
-                              ""
-                            )}
-                            {product.order_type === "all" ||
-                              product.order_type === "" ||
-                              product.order_type === "installment" ? (
-                              <Button
-                                variant="outline-dark"
-                                className="buttonkupitVrasrochka rassrochka"
-                                href="#calcBox"
-                              >
-                                Рассрочку
-                              </Button>
-                            ) : (
-                              ""
-                            )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </Col>
-                )}
-              )}
+                      </Col>
+                    )
+                  );
+                }
+              )
+            )}
           </Row>
           <Row>
             <div className={openModalClass}>
@@ -262,12 +235,13 @@ const Product = (props) => {
                 </div>
                 <div className="inputFormBox">
                   <label htmlFor="">
-                    <b>Товар:</b> {order}
+                    <h5>
+                      <b>Товар:</b> {order}
+                    </h5>
                   </label>
                   <Form.Group className="w-100">
                     <Form.Label className="w-100 mt-4">Имя</Form.Label>
                     <Form.Control
-
                       type="text"
                       onChange={(e) => setName(e.target.value)}
                       required
@@ -286,38 +260,69 @@ const Product = (props) => {
                   </Form.Group>
                   <Form.Group className="w-100">
                     <Form.Label className="w-100">Выберите регион</Form.Label>
-                    <Form.Control as="select" onChange={(e) => setRegion(e.target.value)} required >
-                      <option selected value="Ташкент">Ташкент</option>
-                      <option value="Ташкентская область">Ташкентская область	</option>
-                      <option value="Андижанская область">Андижанская область</option>
-                      <option value="Бухарская область">Бухарская область</option>
-                      <option value="Джизакская область">Джизакская область</option>
-                      <option value="Кашкадарьинская область">Кашкадарьинская область</option>
-                      <option value="Навоийская область">Навоийская область</option>
-                      <option value="Наманганская область">Наманганская область</option>
-                      <option value="Самаркандская область">Самаркандская область</option>
-                      <option value="Сурхандарьинская область">Сурхандарьинская область</option>
-                      <option value="Сырдарьинская область">Сырдарьинская область</option>
-                      <option value="Ферганская область">Ферганская область</option>
-                      <option value="Хорезмская область">Хорезмская область	</option>
+                    <Form.Control
+                      as="select"
+                      onChange={(e) => setRegion(e.target.value)}
+                      required
+                    >
+                      <option selected value="Ташкент">
+                        Ташкент
+                      </option>
+                      <option value="Ташкентская область">
+                        Ташкентская область{" "}
+                      </option>
+                      <option value="Андижанская область">
+                        Андижанская область
+                      </option>
+                      <option value="Бухарская область">
+                        Бухарская область
+                      </option>
+                      <option value="Джизакская область">
+                        Джизакская область
+                      </option>
+                      <option value="Кашкадарьинская область">
+                        Кашкадарьинская область
+                      </option>
+                      <option value="Навоийская область">
+                        Навоийская область
+                      </option>
+                      <option value="Наманганская область">
+                        Наманганская область
+                      </option>
+                      <option value="Самаркандская область">
+                        Самаркандская область
+                      </option>
+                      <option value="Сурхандарьинская область">
+                        Сурхандарьинская область
+                      </option>
+                      <option value="Сырдарьинская область">
+                        Сырдарьинская область
+                      </option>
+                      <option value="Ферганская область">
+                        Ферганская область
+                      </option>
+                      <option value="Хорезмская область">
+                        Хорезмская область{" "}
+                      </option>
                     </Form.Control>
                   </Form.Group>
                   <Form.Group className="w-100">
                     <Form.Label className="w-100">Количество</Form.Label>
-                    <Form.Control as="select" onChange={(e) => setQuantity(e.target.value)} required >
-                      <option selected value="1">1</option>
+                    <Form.Control
+                      as="select"
+                      onChange={(e) => setQuantity(e.target.value)}
+                      required
+                    >
+                      <option selected value="1">
+                        1
+                      </option>
                       <option value="2">2</option>
                       <option value="3">3</option>
                       <option value="4">4</option>
                       <option value="5">5</option>
                     </Form.Control>
                   </Form.Group>
-                  <input
-                    type="hidden"
-
-                    placeholder="product"
-                    value={order}
-                  />
+                  <input type="hidden" placeholder="product" value={order} />
                   <button type="submit" className="buttonModal">
                     Отправить
                   </button>
@@ -367,7 +372,7 @@ const Product = (props) => {
                     <SwiperSlide className="brand" key={i}>
                       <Link to={`/${brands.link}`} className="brandImage">
                         <div className="circle"></div>
-                        <img src={uploadURL + brands.image} alt="" />
+                        <img src={brands.image} alt="" />
                       </Link>
                       <div className="brandsText">{brands.name}</div>
                     </SwiperSlide>
@@ -378,6 +383,7 @@ const Product = (props) => {
           </Row>
         </Container>
       </div>
+      :
     </>
   );
 };

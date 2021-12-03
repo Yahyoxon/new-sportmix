@@ -5,10 +5,10 @@ import { VscClose } from "react-icons/vsc";
 import '../components/Product/product.scss'
 import LazyLoad from 'react-lazyload';
 import  '../components/Calculator/calculator.scss'
+import axios from "axios";
 
 
 const HomeByBrand = (props) => {
-  const apiUrl = "https://admin.sport-mix.uz/";
   const [selectedProduct, setselectedProduct] = useState([]);
   const [order, setOrder] = useState([]);
   const [prodOrder, setProdOrder] = useState([]);
@@ -19,38 +19,45 @@ const HomeByBrand = (props) => {
   const [clientphoneNumber, setPhoneNumber] = useState("");
   const [openModalClass, setOpenModalClass] = useState("modalSectionHidden");
   const [successModal, setSuccessModal] = useState("forHidden");
-  const orderPriceSplite = Number(prodOrderPrice).toLocaleString();
   const [filteredData, setFilteredData] = useState();
   const [wordEntered, setWordEntered] = useState("");
   const [notFound, setNotFound] = useState();
-  const [activePageData, setActivePageData] = useState([]);
+  const [IsShowMore, setIsShowMore] = useState(false);
+
   const { id } = useParams();
   useEffect(() => {
     window.scroll(0, 0)
   }, [id]);
 
-  /// filter brands
-  var chat_ID = "-1001247339615";
-  for (let i = 0; i < props.brands.length; i++) {
-    if (selectedProduct.brand_name === props.brands[i].link) {
-      chat_ID = props.brands[i].telegram_chat_id || "-1001247339615";
-    }
-  }
+
 
   /// send telegram group
 
-  const onSubmitModal = (e) => {
+  const onSubmitModal = async(e) => {
     e.preventDefault();
-    let api = new XMLHttpRequest();
-    var forSend = `🏪 Магазин: ${prodOrder}%0A💵 Наличными%0A%0A👥Имя: ${clientName}%0A📞Тел: ${clientphoneNumber}%0A📦Товар: ${order}%0A💵Итого: ${orderPriceSplite} сум%0A📍 Регион: ${region}%0A🖇 Количество: ${quantity}%0A%0A ${apiUrl + "uploads/" + selectedProduct.image}`;
-    var token = "1745885286:AAGnCac1rJJnQI2XIAUW8LL2_RN2MHN-SVE";
-    var url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_ID}&text=${forSend}`;
-    api.open("GET", url, true);
-    api.send();
-    setName("");
-    setPhoneNumber("");
-    setSuccessModal("modalSuccessSubmit");
-    setOpenModalClass("forHidden");
+    const response = await axios.post(
+      "https://api.sport-mix.uz/api/order/create",
+      {
+        product: order,
+        username: clientName,
+        phone: clientphoneNumber,
+        region: region,
+        quantity: quantity,
+        cashback: 0,
+        total_price: prodOrderPrice,
+        brand_name: prodOrder,
+        image: selectedProduct.images[0],
+        oqim: null,
+      }
+    );
+    if ((response.data = "true")) {
+      setName("");
+      setPhoneNumber("");
+      setRegion("");
+      setQuantity("");
+      setSuccessModal("modalSuccessSubmit");
+      setOpenModalClass("forHidden");
+    }
   };
 
   //search
@@ -76,18 +83,12 @@ const HomeByBrand = (props) => {
     setNotFound()
   }, [wordEntered])
 
-  useEffect(() => {
-    const handleProductActive = () => {
-      const activeProducts = [];
-      for (let l = 0; l < props.product.length; l++) {
-        if (props.product[l].order_type !== "none") {
-          activeProducts[l] = props.product[l];
-          setActivePageData(activeProducts);
-        }
-      }
-    };
-    handleProductActive();
-  }, [props.product]);
+  
+  let categories = props.category.slice(0, 12);
+  const showMoreCat = () => {
+    setIsShowMore(!IsShowMore);
+    window.scrollTo(0, 100);
+  };
 
   return (
     <>
@@ -98,18 +99,16 @@ const HomeByBrand = (props) => {
               <Navbar expand="lg">
                 <Navbar.Brand className="logoBox">
                   {props.brands.map((brand, i) => {
-                    return id === brand.link ? (
+                    return id === brand.link && (
                       <div className="brandContent" key={i}>
                         <img
                           className="brandLogo"
                           key={i}
-                          src={apiUrl + "uploads/" + brand.image}
+                          src={brand.image}
                           alt={brand.name}
                         />
                         <div className="brandName">{brand.name}</div>
                       </div>
-                    ) : (
-                      console.log("")
                     );
                   })}
                 </Navbar.Brand>
@@ -125,37 +124,60 @@ const HomeByBrand = (props) => {
           </Row>
         </Container>
       </div>
-      {/* <Calculator
-        brands={props.brands}
-        CalcProductDB={props.product}
-        selectedProduct={selectedProduct}
-      /> */}
       <Container>
         <Row>
           <Col>
             <div className="kategoriy">Категории</div>
           </Col>
+          <Col>
+            <div className="show-more-button" onClick={showMoreCat}>
+              {IsShowMore ? "Скрыть категории" : "Все категории"}
+              <span>{" >>"}</span>
+            </div>
+          </Col>
         </Row>
         <Row>
-          {props.category.map((categories, i) => {
+          {IsShowMore? props.category.map((cat, i) => {
             return (
               <Col key={i} lg="2" md="3" sm="3" xs="3">
                   <div className="catBox">
-                    <Link to={`/${id}/${categories.link}`}>
+                    <Link to={`/${id}/${cat.link}`}>
                       <div
                         className="imgBoxCat"
                       >
                         <div className="circle"></div>
-                        <img src={categories.image} alt="" />
+                        <img src={cat.image} alt="" />
                       </div>
                     </Link>
-                    <Link to={`/${id}/${categories.link}`}>
-                      <div className="CatText">{categories.name}</div>
+                    <Link to={`/${id}/${cat.link}`}>
+                      <div className="CatText">{cat.name}</div>
                     </Link>
                   </div>
               </Col>
             );
-          })}
+          }):
+          (
+            categories.map((cat, i) => {
+              return (
+                <Col key={i} lg="2" md="3" sm="3" xs="3">
+                    <div className="catBox">
+                      <Link to={`/${id}/${cat.link}`}>
+                        <div
+                          className="imgBoxCat"
+                        >
+                          <div className="circle"></div>
+                          <img src={cat.image} alt="" />
+                        </div>
+                      </Link>
+                      <Link to={`/${id}/${cat.link}`}>
+                        <div className="CatText">{cat.name}</div>
+                      </Link>
+                    </div>
+                </Col>
+              );
+            })
+          )
+          }
         </Row>
       </Container>
       <div className="productComponent">
@@ -177,7 +199,7 @@ const HomeByBrand = (props) => {
           <Row>
             {notFound
               ? notFound
-              : (filteredData ? filteredData : activePageData).map(
+              : (filteredData ? filteredData : props.product).map(
                 (product, i) => {
                   return id === product.brand_name ?
                     <Col
@@ -191,9 +213,7 @@ const HomeByBrand = (props) => {
                         <div className="imgBox">
                           <LazyLoad height={300}>
                             <img
-                              src={apiUrl + "uploads/" +
-                                product.image
-                              }
+                              src={product.images[0]}
                               alt=""
                             />
                           </LazyLoad>
@@ -208,10 +228,6 @@ const HomeByBrand = (props) => {
                               {Number(product.price).toLocaleString()} сум
                             </p>
                             <div className="bottomButtons">
-                              {product.order_type === "all" ||
-                                product.order_type === "none" ||
-                                product.order_type === "" ||
-                                product.order_type === "order" ? (
                                 <div
                                   className="orderr"
                                   onClick={() => {
@@ -230,17 +246,6 @@ const HomeByBrand = (props) => {
                                     Заказать
                                   </Button>
                                 </div>
-                              ) : null}
-                              {product.order_type === "all" ||
-                                product.order_type === "" ||
-                                product.order_type === "installment" ? (
-                                <Button
-                                  variant="outline-dark"
-                                  className="buttonkupitVrasrochka rassrochka"
-                                  href="#calcBox"
-                                >
-                                  Рассрочку
-                                </Button>) : null}
                             </div>
                           </div>
                         </div>
@@ -354,7 +359,7 @@ const HomeByBrand = (props) => {
                       <img
                         className="brandLogo"
                         key={i}
-                        src={apiUrl + "uploads/" + brand.image}
+                        src={brand.image}
                         alt={brand.name}
                       />
                       <div className="brandName">{brand.name}</div>
